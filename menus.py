@@ -31,32 +31,44 @@ class SideMenu:
         auto_width: bool = True,
         documentation: bool = False,
     ):
-        self.collapsed = collapsed
-        self.collapsable = collapsable
-        self.disable_group_names = disable_group_names
-        self.documentation = documentation
-        self.items = items or []
-        self.active_root_item: Optional[SideMenuItem] = None
-        self.expand_root_item: bool = False
-        self._documentation_icon: str = "Documentation"
-        self._documentation_label: str = "Documentation"
-        self._auto_width: bool = auto_width
-        self._min_width: int = 200
-        self._max_width: int = 300
-        self._width: List[str] = ["210px", "48px"]
-        self._height: str = "100%"
-        self._collapse_button_icon: List[str] = ["DoubleChevronLeft8", "DoubleChevronRight8"]
-        self._collapsed_item_label: str = ""
-        self._collapsed_group_label: str = ""
-        self._collapsed_sub_item_icon: str = "DecreaseIndentArrowMirrored"
-        self._sub_item_label_start: str = "•"
+        self.collapsed = (
+            collapsed  # State of collapsed or not. If True, app wil start with collapsed side-menu.
+        )
+        self.collapsable = collapsable  # If True, side-menu can be collapsed and collapsed button will be rendered.
+        self.disable_group_names = disable_group_names  # If True, group names will not be rendered.
+        self.documentation = documentation  # If True, documentation item will be rendered.
+        self.items = items or []  # List of SideMenuItem
+        self.active_root_item: Optional[
+            SideMenuItem
+        ] = None  # Active root item. It's needed to expand the root item when it's active.
+        self.expand_root_item: bool = False  # If True, root item will be expanded on the side-menu.
+        self._documentation_icon: str = "Documentation"  # Icon for documentation item.
+        self._documentation_label: str = "Documentation"  # Label for documentation item.
+        self._auto_width: bool = auto_width  # If True, width will be calculated based on the longest item label, and min_width&max_width attributes.
+        self._min_width: int = 200  # Minimum width of the side-menu.
+        self._max_width: int = 300  # Maximum width of the side-menu.
+        self._width: List[str] = [
+            "210px",
+            "48px",
+        ]  # Width of the side-menu. First item is for the un-collapsed state, second item is for the collapsed state.
+        self._height: str = "100%"  # Height of the side-menu.
+        self._collapse_button_icon: List[str] = [
+            "DoubleChevronLeft8",
+            "DoubleChevronRight8",
+        ]  # Icon for collapse button. First item is for the un-collapsed state, second item is for the collapsed state.
+        self._collapsed_item_label: str = ""  # Label for collapsed items.
+        self._collapsed_group_label: str = ""  # Label for collapsed groups.
+        self._collapsed_sub_item_icon: str = (
+            "DecreaseIndentArrowMirrored"  # Icon for collapsed sub-items.
+        )
+        self._sub_item_label_start: str = "•"  # Label start for sub-items.
 
     def toggle_state(self):
         """Toggle the flag variable each time collapse button is clicked"""
         self.collapsed = not self.collapsed
 
     def get_item(self, name: str) -> Optional[SideMenuItem]:
-        """Returns SideMenuItem based on its name"""
+        """Returns SideMenuItem based on name"""
         if self.items and len(self.items) > 0:
             for item in self.items:
                 if item.name == name:
@@ -126,6 +138,7 @@ class SideMenu:
 
     @property
     def width(self) -> str:
+        """Return width based on the collapsed state"""
         if self.auto_width and not self.collapsed:
             # Calculating the width based on the longest item label
             label_lengths = []
@@ -203,6 +216,7 @@ class SideMenu:
         self._sub_item_label_start = value
 
     def groups(self):
+        """Returns list of groups from the items"""
         groups = []
         for item in self.items:
             if item.group not in groups:
@@ -210,6 +224,7 @@ class SideMenu:
         return groups
 
     def group_items(self, group):
+        """Returns list of items from the items based on the group"""
         group_items = []
         for item in self.items:
             if item.group == group:
@@ -217,12 +232,16 @@ class SideMenu:
         return group_items
 
     def get_label(self, item: SideMenuItem):
+        """For display purposes, returns label based on the state of collapsed.
+        If collapsed, returns collapsed_item_label instead of item.label"""
         return self.collapsed_item_label if self.collapsed else item.label
 
     def get_icon(
         self,
         item: SideMenuItem,
     ):
+        """For display purposes, returns icon based on the state of collapsed and active_item_label.
+        If collapsed, always render original icon. If not collapsed, render expanded icon when the item is expanded."""
         if self.collapsed:
             # Always render original icon when menu is collapsed
             return item.icon
@@ -279,7 +298,7 @@ class SideMenu:
         self,
         q: Q,
     ):
-        """Returns wave navigation content based on the items and the active index"""
+        """Returns wave navigation content based on the state of collapsed and items"""
         contents = [
             ui.nav_group(
                 label=self.collapsed_group_label if self.disable_group_names else group,

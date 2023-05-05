@@ -1,14 +1,17 @@
 from pathlib import Path
+from typing import List
 
 from h2o_wave import Q, app, main, ui  # noqa F401
 
 from menus import SideMenu, SideMenuItem
 
-app_layoutsize: str = "1000px"
-stylesheet = ui.InlineStylesheet(Path("common.css").read_text())
+app_layoutsize: str = "1000px"  # Change this to change the size of the layout
+stylesheet = ui.InlineStylesheet(
+    Path("common.css").read_text()
+)  # CSS file for styling. Spefically for spacing between different nav_groups without group names
 
 
-side_menu_items = [
+side_menu_items: List[SideMenuItem] = [
     SideMenuItem(
         name="home",
         label="Home",
@@ -41,6 +44,7 @@ side_menu_items = [
 
 
 async def update_app_layout(q: Q):
+    """Update the app layout based on the state of the side menu"""
     app_layout = ui.layout(
         breakpoint=app_layoutsize,
         width=app_layoutsize,
@@ -66,6 +70,7 @@ async def update_app_layout(q: Q):
 
 
 async def init_app(q: Q):
+    """Initialise the app"""
     if q.app.initialised:
         return
     q.app.side_menu = SideMenu(items=side_menu_items, collapsable=True, disable_group_names=True)
@@ -74,6 +79,7 @@ async def init_app(q: Q):
 
 
 async def handle_args(q: Q):
+    """Handle the arguments passed to the app"""
     if q.args["side_menu_toggle_collapse"]:
         q.app.side_menu.toggle_state()
     elif q.args["subpage"]:
@@ -103,6 +109,7 @@ async def handle_args(q: Q):
 
 
 async def render_sidemenu(q: Q):
+    """Render the side menu"""
     q.page["sidemenu"] = ui.nav_card(
         box=ui.box(zone="sidebar", width=q.app.side_menu.width, height=q.app.side_menu.height),
         items=q.app.side_menu.get_nav_content(q=q),
@@ -111,7 +118,7 @@ async def render_sidemenu(q: Q):
 
 
 async def render_cards(q: Q):
-
+    """Render the cards based on the active page"""
     if q.app.active_page == "home":
         q.page["example"] = ui.form_card(
             box=ui.box(zone="main_body", height="500px"),
@@ -144,6 +151,7 @@ async def render_cards(q: Q):
 
 @app("/demo")
 async def serve(q: Q):
+    """Main app function"""
     print(f"q.args: {q.args}")  # Logging
     await init_app(q)
     await handle_args(q)
