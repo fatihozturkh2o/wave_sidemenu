@@ -12,7 +12,7 @@ side_menu_items = [
     SideMenuItem(
         name="home",
         label="Home",
-        group="1",
+        group="Group 1",
         icon="Home",
         render=True,
         sub_items=[
@@ -33,7 +33,7 @@ side_menu_items = [
     SideMenuItem(
         name="about",
         label="About",
-        group="1",
+        group="Group 1",
         icon="cat",
         render=True,
     ),
@@ -68,7 +68,7 @@ async def update_app_layout(q: Q):
 async def init_app(q: Q):
     if q.app.initialised:
         return
-    q.app.side_menu = SideMenu(items=side_menu_items, collapsable=True)
+    q.app.side_menu = SideMenu(items=side_menu_items, collapsable=True, disable_group_names=True)
     q.app.active_page = "home"
     q.app.initialised = True
 
