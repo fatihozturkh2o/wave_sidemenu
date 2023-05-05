@@ -1,68 +1,62 @@
-from h2o_wave import main, app, Q, ui
-from menus import SideMenu, SideMenuItem
-from typing import List
+from h2o_wave import Q, app, main, ui  # noqa F401
 
+from menus import SideMenu, SideMenuItem
 
 side_menu_items = [
     SideMenuItem(
-    group="1",
-    name="home",
-    label="Home",
-    icon="Home",
-    render=True,
-    sub_items=[
-        SideMenuItem(
-            name="subpage",
-            label="Subpage",
-            icon="model",
-            render=False,
-        ),
-        SideMenuItem(
-            name="subpage2",
-            label="Subpage 2",
-            icon="model",
-            render=False,
-        ),
-    ]
+        name="home",
+        label="Home",
+        group="1",
+        icon="Home",
+        render=True,
+        sub_items=[
+            SideMenuItem(
+                name="subpage",
+                label="Subpage",
+                icon="model",
+                render=False,
+            ),
+            SideMenuItem(
+                name="subpage2",
+                label="Subpage 2",
+                icon="model",
+                render=False,
+            ),
+        ],
     ),
     SideMenuItem(
-    group="1",
-    name="about",
-    label="About",
-    icon="cat",
-    render=True,
+        name="about",
+        label="About",
+        group="1",
+        icon="cat",
+        render=True,
     ),
-    # SideMenuItem(
-    # group="2",
-    # name="help",
-    # label="Help",
-    # icon="Car",
-    # render=True,
-    # ),
 ]
+
 
 async def update_app_layout(q: Q):
     app_layout = ui.layout(
-    breakpoint="1800px",
-    width="1800px",
-    zones=[
-        ui.zone("header"),
-        ui.zone(
-            name="main",
-            direction=ui.ZoneDirection.ROW,
-            zones=[
-                        q.app.side_menu.layout,
-                        ui.zone("main_body"),
-                    ],
-        ),
-    ],
+        breakpoint="1800px",
+        width="1800px",
+        zones=[
+            ui.zone("header"),
+            ui.zone(
+                name="main",
+                direction=ui.ZoneDirection.ROW,
+                zones=[
+                    q.app.side_menu.layout,  # Sidemenu layout info changes based on the state of collapsed or not
+                    ui.zone("main_body"),
+                ],
+            ),
+        ],
     )
 
     q.page["meta"] = ui.meta_card(
-    box="",
-    title="Side-menu Tutorial",
-    layouts=[app_layout],
+        box="",
+        title="Side-menu Tutorial",
+        layouts=[app_layout],
     )
+
 
 async def init_app(q: Q):
     if q.app.initialised:
@@ -70,6 +64,7 @@ async def init_app(q: Q):
     q.app.side_menu = SideMenu(items=side_menu_items, collapsable=True)
     q.app.active_page = "home"
     q.app.initialised = True
+
 
 async def handle_args(q: Q):
     if q.args["side_menu_toggle_collapse"]:
@@ -99,40 +94,36 @@ async def handle_args(q: Q):
         q.app.side_menu.disable_subitems()
         q.app.active_page = "about"
 
+
 async def render_sidemenu(q: Q):
-        q.page["sidemenu"] = ui.nav_card(
+    q.page["sidemenu"] = ui.nav_card(
         box=ui.box(zone="sidebar", width=q.app.side_menu.width, height=q.app.side_menu.height),
         items=q.app.side_menu.get_nav_content(q=q),
-        value=q.app.active_page, 
+        value=q.app.active_page,
     )
-        
+
+
 async def render_cards(q: Q):
 
     if q.app.active_page == "home":
-        q.page['example'] = ui.form_card(box='main_body',
-                                    items=[
-                                        ui.text("Home"),
-                                        ui.button(name="subpage", label="Subpage", primary=True),
-                                        ui.button(name="subpage2", label="Subpage 2", primary=True)
-
-                                    ])
+        q.page["example"] = ui.form_card(
+            box="main_body",
+            items=[
+                ui.text("Home"),
+                ui.button(name="subpage", label="Subpage", primary=True),
+                ui.button(name="subpage2", label="Subpage 2", primary=True),
+            ],
+        )
     elif q.app.active_page == "about":
-        q.page['example'] = ui.form_card(box='main_body',
-                                    items=[
-                                        ui.text("About")
-                                    ])
+        q.page["example"] = ui.form_card(box="main_body", items=[ui.text("About")])
     elif q.app.active_page == "subpage":
-        q.page['example'] = ui.form_card(box='main_body',
-                                    items=[
-                                        ui.text("Subpage")
-                                    ])
+        q.page["example"] = ui.form_card(box="main_body", items=[ui.text("Subpage")])
     elif q.app.active_page == "subpage2":
-        q.page['example'] = ui.form_card(box='main_body',
-                                    items=[
-                                        ui.text("Subpage 2")
-                                    ])
-@app('/demo')
-async def serve(q: Q): 
+        q.page["example"] = ui.form_card(box="main_body", items=[ui.text("Subpage 2")])
+
+
+@app("/demo")
+async def serve(q: Q):
     print(f"q.args: {q.args}")  # Logging
     await init_app(q)
     await handle_args(q)

@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, List, Optional
+from typing import List, Optional
 
 import numpy as np
 from h2o_wave import Q, ui
@@ -11,15 +10,15 @@ from h2o_wave.types import Zone
 
 @dataclass
 class SideMenuItem:
+    name: str  # wave attribute, name for handling click operations
+    label: str  # wave attribute, label to display
     group: Optional[str] = None  # wave attribute, display items based on their groups
-    name: Optional[str] = None  # wave attribute, name for handling click operations
-    label: Optional[str] = None  # wave attribute, label to display
     icon: Optional[str] = "ChevronRightMed"  # wave attribute, icon to display
     expanded_icon: Optional[str] = "ChevronDownMed"  # expanded icon to display
     disabled: Optional[bool] = False  # wave attribute
     expand_always: Optional[bool] = False  # always expand and render sub items
     render: Optional[bool] = False  # render item
-    sub_items: Optional[List] = field(default_factory=list)  # assign sub items
+    sub_items: List = field(default_factory=list)  # assign sub items
 
 
 class SideMenu:
@@ -35,7 +34,7 @@ class SideMenu:
         self.collapsable = collapsable
         self.documentation = documentation
         self.items = items or []
-        self.active_root_item: Optional[SideMenu] = None
+        self.active_root_item: Optional[SideMenuItem] = None
         self.expand_root_item: bool = False
         self._documentation_icon: str = "Documentation"
         self._documentation_label: str = "Documentation"
@@ -65,7 +64,7 @@ class SideMenu:
                         if subitem.name == name:
                             return subitem
         return None
-    
+
     def get_root_item(self, name: str) -> Optional[SideMenuItem]:
         """Returns root SideMenuItem based on subitem's name"""
         if self.items and len(self.items) > 0:
@@ -75,37 +74,37 @@ class SideMenu:
                         if subitem.name == name:
                             return item
         return None
-    
-    def enable_subitems(self, name:Optional[str] = None):
+
+    def enable_subitems(self, name: Optional[str] = None):
         """Enable rendering all subitems"""
         if name:  # Only enable rendering subitems of the item passed
             item = self.get_item(name)
-            if len(item.sub_items) > 0:
+            if item and len(item.sub_items) > 0:
                 for subitem in item.sub_items:
                     subitem.render = True
             return
-        
+
         if self.items and len(self.items) > 0:  # Enable rendering all the subitems
             for item in self.items:
                 if len(item.sub_items) > 0:
                     for subitem in item.sub_items:
                         subitem.render = True
 
-    def disable_subitems(self, name:Optional[str] = None):
+    def disable_subitems(self, name: Optional[str] = None):
         """Disable rendering all subitems"""
         if name:  # Only disable rendering subitems of the item passed
             item = self.get_item(name)
-            if len(item.sub_items) > 0:
+            if item and len(item.sub_items) > 0:
                 for subitem in item.sub_items:
                     subitem.render = False
             return
-        
+
         if self.items and len(self.items) > 0:  # Disable rendering all the subitems
             for item in self.items:
                 if len(item.sub_items) > 0:
                     for subitem in item.sub_items:
                         subitem.render = False
-    
+
     @property
     def layout(self) -> Zone:
         """Return layout based on the width"""
@@ -225,7 +224,11 @@ class SideMenu:
         if self.collapsed:
             # Always render original icon when menu is collapsed
             return item.icon
-        if self.active_root_item and (item.name == self.active_root_item.name) and (self.expand_root_item or item.expand_always):
+        if (
+            self.active_root_item
+            and (item.name == self.active_root_item.name)
+            and (self.expand_root_item or item.expand_always)
+        ):
             # Render expanded icon when the item is expanded
             return item.expanded_icon
         return item.icon
@@ -325,4 +328,3 @@ class SideMenu:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}"
-
