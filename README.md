@@ -10,7 +10,7 @@ make setup
 
 ### Run only collapsable SideMenu tutorial
 ```
-make run
+make run  # visit localhost:10101/demo in your browser
 ```
 
 #### How it looks
@@ -18,7 +18,7 @@ make run
 
 ### Run both collapsable and expandable SideMenu tutorial
 ```
-make run-expanding
+make run-expanding  # visit localhost:10101/demo in your browser
 ```
 #### How it looks
 ![Alt Text](static/collapsable_expanding.gif)
