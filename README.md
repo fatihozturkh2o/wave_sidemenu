@@ -13,7 +13,7 @@ make run
 #### How it looks
 ![Alt Text](static/collapsable.gif)
 
-### Runy both collapsable and expandable SideMenu tutorial
+### Run both collapsable and expandable SideMenu tutorial
 ```
 make run-expanding
 ```
