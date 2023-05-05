@@ -66,7 +66,7 @@ q.page["sidemenu"] = ui.nav_card(
         value=q.app.active_page,
     )
 ```
-When `side_menu_toggle_collapse` is clicked, the state of collapsed parameter needs to toggled.
+When `side_menu_toggle_collapse` is clicked, the state of collapsed parameter needs to be toggled.
 ```
 if q.args["side_menu_toggle_collapse"]:
         q.app.side_menu.toggle_state()
@@ -85,7 +85,7 @@ if q.args["side_menu_toggle_collapse"]:
 `documentation` - Whether to show the documentation item or not. Default is False.
 
 ### Expanding a side-menu item with more sub items
-This requires extra handling when sub-items are clicked. SideMenu item needs to know what is the active root item and whether it is expanded or not. This is done by keeping `active_root_item` and `expanded` parameters up-to-date in the SideMenu object.
+This requires extra handling when sub-items are clicked. SideMenu object needs to know what the active root item is and whether it is expanded or not. This is done by keeping `active_root_item` and `expanded` parameters up-to-date in the SideMenu object.
 
 Let's say we have a SideMenuItem called "Home" with sub_items "Subpage" and "Subpage 2"
 ```
