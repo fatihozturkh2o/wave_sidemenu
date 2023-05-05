@@ -1,4 +1,6 @@
 # Collapsable & Expandable SideMenu
+<p align="center"><img src="static/wave-H2O-logo-LightBackground.png"></p>
+
 Collapsable & Expandable SideMenu object for H2O Wave projects
 
 This repo includes 2 tutorials of how to use the SideMenu object. The first one (`collapsable_tutorial.py`) is a collapsable SideMenu and the second one (`collapsable_expanding_tutorial.py`) is a both collapsable and expandable SideMenu. The latter is a bit more complex than the former in terms of handling. The `collapsable_tutorial.py` is a good starting point to understand how the SideMenu object works.
