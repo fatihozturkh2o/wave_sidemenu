@@ -27,10 +27,11 @@ side_menu_items = [
     # ),
 ]
 
-def get_main_layout(q: Q):
-    return ui.layout(
-    breakpoint="",
-    width=None,
+
+async def update_app_layout(q: Q):
+    app_layout = ui.layout(
+    breakpoint="1800px",
+    width="1800px",
     zones=[
         ui.zone("header"),
         ui.zone(
@@ -42,26 +43,13 @@ def get_main_layout(q: Q):
                     ],
         ),
     ],
-)
+    )
 
-def app_layouts(template: ui.layout) -> List[ui.layout]:
-    max_width = "1800px"
-    configs = [("0px", "100%"), (max_width, max_width)]
-
-    layouts: List[ui.layout] = []
-    for b, w in configs:
-        layout = template
-        layout.breakpoint = b
-        layout.width = w
-        layouts.append(layout)
-    return layouts
-
-async def update_app_layout(q: Q):
     q.page["meta"] = ui.meta_card(
     box="",
     title="Side-menu Tutorial",
-    layouts=app_layouts(get_main_layout(q)),
-)
+    layouts=[app_layout],
+    )
 
 async def init_app(q: Q):
     if q.app.initialised:
