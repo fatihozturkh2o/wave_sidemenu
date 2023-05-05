@@ -1,0 +1,6 @@
+/* add back vertical space between nav_groups (gone since wave 0.23) */
+/* to put extra space between different nav_groups even when they don't have group titles*/
+.ms-Nav-group:nth-last-of-type(2) {
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }

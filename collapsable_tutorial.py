@@ -1,6 +1,11 @@
+from pathlib import Path
+
 from h2o_wave import Q, app, main, ui  # noqa F401
 
 from menus import SideMenu, SideMenuItem
+
+app_layoutsize: str = "1000px"
+stylesheet = ui.InlineStylesheet(Path("common.css").read_text())
 
 side_menu_items = [
     SideMenuItem(
@@ -17,13 +22,27 @@ side_menu_items = [
         icon="cat",
         render=True,
     ),
+    SideMenuItem(
+        name="new_group_item_1",
+        label="New Group Item 1",
+        group="2",
+        icon="CoffeeScript",
+        render=True,
+    ),
+    SideMenuItem(
+        name="new_group_item_2",
+        label="New Group Item 2",
+        group="2",
+        icon="CoffeeScript",
+        render=True,
+    ),
 ]
 
 
 async def update_app_layout(q: Q):
     app_layout = ui.layout(
-        breakpoint="1800px",
-        width="1800px",
+        breakpoint=app_layoutsize,
+        width=app_layoutsize,
         zones=[
             ui.zone("header"),
             ui.zone(
@@ -41,6 +60,7 @@ async def update_app_layout(q: Q):
         box="",
         title="Side-menu Tutorial",
         layouts=[app_layout],
+        stylesheet=stylesheet,
     )
 
 
@@ -73,13 +93,18 @@ async def render_cards(q: Q):
 
     if q.app.active_page == "home":
         q.page["example"] = ui.form_card(
-            box="main_body",
+            box=ui.box(zone="main_body", height="500px"),
             items=[
-                ui.text("Home"),
+                ui.text(
+                    "<h3 style='font-size:1.5vw'>Welcome to Collapsable SideMenu tutorial!</h3>"
+                ),
             ],
         )
     elif q.app.active_page == "about":
-        q.page["example"] = ui.form_card(box="main_body", items=[ui.text("About")])
+        q.page["example"] = ui.form_card(
+            box=ui.box(zone="main_body", height="500px"),
+            items=[ui.text("SideMenu object can be used only in H2O Wave projects")],
+        )
 
 
 @app("/demo")

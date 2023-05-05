@@ -27,11 +27,13 @@ class SideMenu:
         items: Optional[List[SideMenuItem]] = None,
         collapsed: bool = False,
         collapsable: bool = True,
+        disable_group_names: bool = True,
         auto_width: bool = True,
         documentation: bool = False,
     ):
         self.collapsed = collapsed
         self.collapsable = collapsable
+        self.disable_group_names = disable_group_names
         self.documentation = documentation
         self.items = items or []
         self.active_root_item: Optional[SideMenuItem] = None
@@ -280,7 +282,7 @@ class SideMenu:
         """Returns wave navigation content based on the items and the active index"""
         contents = [
             ui.nav_group(
-                label=self.collapsed_group_label,
+                label=self.collapsed_group_label if self.disable_group_names else group,
                 items=[
                     ui.nav_item(
                         name=item.name,
